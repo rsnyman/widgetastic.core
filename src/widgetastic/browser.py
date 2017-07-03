@@ -405,6 +405,7 @@ class Browser(object):
                         locator))
         return el
 
+    @logged(log_args=True, only_after=True, log_full_exception=False)
     def drag_and_drop(self, source, target):
         """Drags the source element and drops it into target.
 
@@ -427,6 +428,7 @@ class Browser(object):
             self.logger.debug('execute_script(%r)', script)
         return self.selenium.execute_script(dedent(script), *args, **kwargs)
 
+    @logged(only_after=True, log_full_exception=False)
     def refresh(self):
         """Triggers a page refresh."""
         return self.selenium.refresh()
@@ -495,7 +497,7 @@ class Browser(object):
     def set_attribute(self, attr, value, locator, *args, **kwargs):
         return self.execute_script(
             "arguments[0].setAttribute(arguments[1], arguments[2]);",
-            self.element(locator, *args, **kwargs), attr, value)
+            self.element(locator, *args, **kwargs), attr, value, silent=True)
 
     @logged(
         log_args=True, log_result=True, only_after=True, debug_only=True, log_full_exception=False)
@@ -517,6 +519,11 @@ class Browser(object):
     @logged(
         log_args=True, log_result=True, only_after=True, debug_only=True, log_full_exception=False)
     def is_selected(self, locator, *args, **kwargs):
+        """Returns whether the element (checkbox) is selected.
+
+        Returns:
+            :py:class:`bool`
+        """
         return self.element(locator, *args, **kwargs).is_selected()
 
     @logged(log_args=True, debug_only=True, log_full_exception=False)
